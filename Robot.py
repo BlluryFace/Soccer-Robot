@@ -1,70 +1,79 @@
 from RPi import GPIO
 import time
+
+
 class Robot:
-    def __init__(self, name, rwheel, lwheel):
+    def __init__(self, name, lwheel, rwheel):
         self.name = name
         # getting GPIO #'s in sets for R & L
         self.rwheel = tuple(rwheel)
         self.lwheel = tuple(lwheel)
 
-        #identifiying indv #'s as ints
+        # identifiying indv #'s as ints
         self.rwheel_f = int(rwheel[0])
-        self. rwheeL_b = int(rwheel[1])
-        
-        self.lwheel_f = int(rwheel[0])
-        self. lwheel_b = int(rwheel[1])
+        self.rwheel_b = int(rwheel[1])
+
+        self.lwheel_f = int(lwheel[0])
+        self.lwheel_b = int(lwheel[1])
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.rwheel_f, GPIO.OUT)
+        GPIO.setup(self.rwheel_b, GPIO.OUT)
+        GPIO.setup(self.lwheel_f, GPIO.OUT)
+        GPIO.setup(self.lwheel_b, GPIO.OUT)
 
     def forward(self, sec):
-        GPIO.output (self.rwheel_f, True)
-        GPIO.output (self.lwheel_f, True)
-        time.sleep (sec)
+        GPIO.output(self.rwheel_f, True)
+        GPIO.output(self.lwheel_f, True)
+        time.sleep(sec)
         # stop
-        GPIO.output (self.rwheel_f, True)
-        GPIO.output (self.lwheel_f, True)
+        GPIO.output(self.rwheel_f, False)
+        GPIO.output(self.lwheel_f, False)
 
     def backward(self, sec):
-        GPIO.output (self.rwheel_b, True)
-        GPIO.output (self.lwheel_b, True)
-        time.sleep (sec)
+        GPIO.output(self.rwheel_b, True)
+        GPIO.output(self.lwheel_b, True)
+        time.sleep(sec)
         # stop
-        GPIO.output (self.rwheel_f, False)
-        GPIO.output (self.lwheel_f, False)
+        GPIO.output(self.rwheel_b, False)
+        GPIO.output(self.lwheel_b, False)
 
-    def lturn(self, sec): # turn left
-        GPIO.output (self.rwheel_f, True)
-        GPIO.output (self.lwheel_f, False)
-        time.sleep (sec)
+    def lturn(self, sec):  # turn left
+        GPIO.output(self.rwheel_f, True)
+        GPIO.output(self.lwheel_f, False)
+        time.sleep(sec)
         # stop
-        GPIO.output (self.rwheel_f, False)
-        GPIO.output (self.lwheel_f, False)
+        GPIO.output(self.rwheel_f, False)
+        GPIO.output(self.lwheel_f, False)
 
-    def rturn(self, sec): # turn right
-        GPIO.output (self.rwheel_f, False)
-        GPIO.output (self.lwheel_f, True)
-        time.sleep (sec)
+    def rturn(self, sec):  # turn right
+        GPIO.output(self.rwheel_f, False)
+        GPIO.output(self.lwheel_f, True)
+        time.sleep(sec)
         # stop
-        GPIO.output (self.rwheel_f, False)
-        GPIO.output (self.lwheel_f, False)
-            
-            
+        GPIO.output(self.rwheel_f, False)
+        GPIO.output(self.lwheel_f, False)
+
+    def cleanup(self):
+        GPIO.cleanup([self.rwheel_f, self.rwheel_b,
+                     self.lwheel_f, self.lwheel_b])
+
+
 def main():
     # Test if the robot move successfully
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(18, GPIO.OUT)
-    GPIO.setup(23, GPIO.OUT)
-    GPIO.setup(24, GPIO.OUT)
-    GPIO.setup(25, GPIO.OUT)
-    GPIO.setup(12, GPIO.OUT)
-    GPIO.setup(16, GPIO.OUT)
-    GPIO.setup(20, GPIO.OUT)
-    GPIO.setup(21, GPIO.OUT)
-    
-    robot1 = Robot("robot1", (18, 23), (24, 25))
-    robot1.forward(2)
-    robot1.lturn(2)
-    robot1.rturn(2)
-    robot1.backward(2)
-    GPIO.cleanup()
-    
+    it = 20 # Run the robot 20 times, which is about 20 * 20 = 400 seconds ~ 6.67 minutes
+    i = 0
+    while i < it:
+        try:
+            robot1 = Robot("player", (18, 17), (23, 22))
+            robot1.forward(5)
+            robot1.lturn(5)
+            robot1.rturn(5)
+            robot1.backward(5)
+            robot1.cleanup()
+        except KeyboardInterrupt:
+            break
+        i += 1
+
+
 if __name__ == "__main__":
     main()
