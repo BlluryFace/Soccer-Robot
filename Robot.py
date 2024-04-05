@@ -62,18 +62,19 @@ def main():
     # Test if the robot move successfully
     it = 20 # Run the robot 20 times, which is about 20 * 20 = 400 seconds ~ 6.67 minutes
     i = 0
-    while i < it:
-        try:
+    try:
+        while i < it:
             robot1 = Robot("player", (18, 17), (23, 22))
             robot1.forward(5)
             robot1.lturn(5)
             robot1.rturn(5)
             robot1.backward(5)
             robot1.cleanup()
-        except KeyboardInterrupt:
-            break
-        i += 1
-
+            i += 1
+    except KeyboardInterrupt:
+        pass
+    finally:
+        robot1.cleanup()
 
 if __name__ == "__main__":
     main()
