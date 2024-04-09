@@ -54,6 +54,10 @@ class Robot:
         GPIO.output(self.lwheel_f, False)
 
     def cleanup(self):
+        GPIO.output(self.rwheel_f, False)
+        GPIO.output(self.rwheel_b, False)
+        GPIO.output(self.lwheel_f, False)
+        GPIO.output(self.lwheel_b, False)
         GPIO.cleanup([self.rwheel_f, self.rwheel_b,
                      self.lwheel_f, self.lwheel_b])
 
