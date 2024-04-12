@@ -69,10 +69,10 @@ def main():
     try:
         while i < it:
             robot1 = Robot("player", (18, 17), (23, 22))
-            robot1.forward(5)
-            robot1.lturn(5)
-            robot1.rturn(5)
-            robot1.backward(5)
+            robot1.forward(1)
+            #robot1.lturn(5)
+            #robot1.rturn(5)
+            robot1.backward(1)
             robot1.cleanup()
             i += 1
     except KeyboardInterrupt:
