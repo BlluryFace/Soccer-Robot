@@ -1,5 +1,6 @@
 from RPi import GPIO
 import time
+import keyboard
 
 
 class Robot:
@@ -21,7 +22,7 @@ class Robot:
         GPIO.setup(self.lwheel_f, GPIO.OUT)
         GPIO.setup(self.lwheel_b, GPIO.OUT)
 
-    def forward(self, sec):
+    def forward(self,sec):
         GPIO.output(self.rwheel_f, True)
         GPIO.output(self.lwheel_f, True)
         time.sleep(sec)
@@ -29,7 +30,7 @@ class Robot:
         GPIO.output(self.rwheel_f, False)
         GPIO.output(self.lwheel_f, False)
 
-    def backward(self, sec):
+    def backward(self,sec):
         GPIO.output(self.rwheel_b, True)
         GPIO.output(self.lwheel_b, True)
         time.sleep(sec)
@@ -37,7 +38,7 @@ class Robot:
         GPIO.output(self.rwheel_b, False)
         GPIO.output(self.lwheel_b, False)
 
-    def lturn(self, sec):  # turn left
+    def lturn(self,sec):  # turn left
         GPIO.output(self.rwheel_f, True)
         GPIO.output(self.lwheel_f, False)
         time.sleep(sec)
@@ -45,7 +46,7 @@ class Robot:
         GPIO.output(self.rwheel_f, False)
         GPIO.output(self.lwheel_f, False)
 
-    def rturn(self, sec):  # turn right
+    def rturn(self,sec):  # turn right
         GPIO.output(self.rwheel_f, False)
         GPIO.output(self.lwheel_f, True)
         time.sleep(sec)
@@ -66,19 +67,25 @@ def main():
     # Test if the robot move successfully
     it = 20 # Run the robot 20 times, which is about 20 * 20 = 400 seconds ~ 6.67 minutes
     i = 0
-    try:
-        while i < it:
-            robot1 = Robot("player", (18, 17), (23, 22))
-            robot1.forward(1)
-            #robot1.lturn(5)
-            #robot1.rturn(5)
-            robot1.backward(1)
+    #try:
+    while True:
+        GPIO.setwarnings(False)
+        robot1 = Robot("player", (18, 17), (23, 22))
+        if keyboard.is_pressed('w'):
+            robot1.forward(0.01)
+        elif keyboard.is_pressed('s'):
+            robot1.backward(0.01)
+        elif keyboard.is_pressed('a'):
+            robot1.lturn(0.01)
+        elif keyboard.is_pressed('d'):
+            robot1.rturn(0.01)
+        elif keyboard.is_pressed('x'):
             robot1.cleanup()
-            i += 1
-    except KeyboardInterrupt:
-        pass
-    finally:
-        robot1.cleanup()
+            #i += 1
+    #except:
+        #print('Something wrong')
+    #finally:
+        print('Done')
 
 if __name__ == "__main__":
     main()
